@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday My Love Mahnoor ❤️ | From Abubakar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js for 3D particle background & dynamic elements -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            cursor: none !important; /* Hide standard cursor for custom glowing heart cursor */
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0d0614;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        .font-serif-luxury {
+            font-family: 'Playfair Display', serif;
+        }
+        .font-cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* 3D Glassmorphism Utilities */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.15);
+        }
+        .glass-card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(244, 114, 182, 0.4);
+            box-shadow: 0 20px 40px 0 rgba(236, 72, 153, 0.35);
+        }
+
+        .glass-btn {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(168, 85, 247, 0.3));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 182, 193, 0.4);
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+            transition: all 0.3s ease;
+        }
+        .glass-btn:hover {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.6), rgba(168, 85, 247, 0.6));
+            box-shadow: 0 6px 30px rgba(236, 72, 153, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* Glowing Text Effects */
+        .glow-text-pink {
+            text-shadow: 0 0 15px rgba(244, 114, 182, 0.7), 0 0 30px rgba(236, 72, 153, 0.4);
+        }
+        .glow-text-gold {
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.8), 0 0 30px rgba(245, 158, 11, 0.5);
+        }
+
+        /* 3D Flip Card Effect */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .flip-card:hover .transform-style-3d {
+            transform: rotateY(180deg);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Heart Cursor Styles */
+        #custom-cursor {
+            pointer-events: none;
+            position: fixed;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .cursor-trail {
+            pointer-events: none;
+            position: fixed;
+            z-index: 9998;
+            border-radius: 50%;
+            animation: floatFade 0.8s forwards linear;
+        }
+
+        @keyframes floatFade {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -80px) scale(0.2) rotate(45deg);
+            }
+        }
+
+        /* Floating Animation */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+        .animate-float {
+            animation: floatSlow 5s ease-in-out infinite;
+        }
+
+        /* Candle Flame Pulse */
+        @keyframes flamePulse {
+            0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 10px #f59e0b); }
+            50% { transform: scale(1.15) rotate(2deg); filter: drop-shadow(0 0 20px #ef4444); }
+        }
+        .flame-anim {
+            animation: flamePulse 1.2s ease-in-out infinite;
+        }
+
+        /* Modal Blur */
+        .modal-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen text-slate-100 selection:bg-pink-500 selection:text-white">
+
+    <!-- 3D Canvas Background -->
+    <canvas id="bg-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Custom Cursor Pointer -->
+    <div id="custom-cursor" class="w-8 h-8 flex items-center justify-center text-pink-400 drop-shadow-[0_0_10px_rgba(244,114,182,0.8)]">
+        <svg class="w-6 h-6 fill-current animate-pulse" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+    </div>
+
+    <!-- Floating Audio Control & Music Ambient Bar -->
+    <div class="fixed top-5 right-5 z-50 flex items-center space-x-3">
+        <button id="music-toggle" class="glass-btn p-3.5 rounded-full flex items-center justify-center text-pink-300 hover:text-white transition group" title="Toggle Romantic Music">
+            <i data-lucide="music" class="w-5 h-5 group-hover:scale-110 transition"></i>
+            <span id="music-status" class="ml-2 text-xs font-semibold uppercase tracking-wider hidden sm:inline">Play Sound</span>
+        </button>
+        <button id="sparkle-burst-btn" class="glass-btn p-3.5 rounded-full text-amber-300 hover:text-white transition" title="Celebratory Fireworks & Hearts">
+            <i data-lucide="sparkles" class="w-5 h-5 animate-spin" style="animation-duration: 6s;"></i>
+        </button>
+    </div>
+
+    <!-- Main Wrapper -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-24">
+
+        <!-- HERO SECTION -->
+        <section class="min-h-[85vh] flex flex-col justify-center items-center text-center pt-8">
+            <!-- Badge -->
+            <div class="glass-card px-5 py-2 rounded-full mb-6 inline-flex items-center space-x-2 border-pink-500/30 text-pink-300 text-sm font-medium tracking-widest uppercase animate-bounce">
+                <i data-lucide="heart" class="w-4 h-4 fill-pink-400 text-pink-400"></i>
+                <span>Exclusive Birthday Wish Dedicated to My Universe</span>
+                <i data-lucide="heart" class="w-4 h-4 fill-pink-400 text-pink-400"></i>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-5xl sm:text-7xl lg:text-8xl font-serif-luxury font-extrabold tracking-tight mb-4">
+                Happy Birthday <br class="hidden sm:block"/>
+                <span class="bg-gradient-to-r from-pink-300 via-rose-400 to-purple-400 bg-clip-text text-transparent glow-text-pink font-cursive text-6xl sm:text-8xl lg:text-9xl">
+                    Mahnoor
+                </span>
+            </h1>
+
+            <p class="mt-4 text-lg sm:text-2xl text-pink-200/90 font-light max-w-2xl mx-auto leading-relaxed">
+                Crafted with endless love &amp; magic by <strong class="text-amber-300 font-semibold underline decoration-pink-500 underline-offset-4">Abubakar</strong>, for the girl who lights up my entire soul.
+            </p>
+
+            <!-- 3D Interactive Birthday Cake Component -->
+            <div class="mt-12 relative group cursor-pointer" id="cake-container">
+                <div class="glass-card p-8 rounded-3xl backdrop-blur-2xl border border-pink-500/20 relative overflow-hidden transition-all duration-500 hover:shadow-[0_0_50px_rgba(236,72,153,0.4)]">
+                    <!-- Background Glow -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-3xl blur opacity-30 group-hover:opacity-75 transition duration-1000"></div>
+
+                    <!-- Cake Graphic Construction -->
+                    <div class="relative flex flex-col items-center justify-center">
+                        <!-- Candles Container -->
+                        <div class="flex space-x-6 mb-2 z-10" id="candles-group">
+                            <!-- Candle 1 -->
+                            <div class="flex flex-col items-center">
+                                <div class="flame-anim candle-flame w-4 h-6 bg-amber-400 rounded-t-full rounded-b-sm shadow-[0_0_15px_#f59e0b]"></div>
+                                <div class="w-2.5 h-10 bg-gradient-to-b from-pink-300 to-pink-500 rounded-sm"></div>
+                            </div>
+                            <!-- Candle 2 (Center Big) -->
+                            <div class="flex flex-col items-center -mt-2">
+                                <div class="flame-anim candle-flame w-5 h-7 bg-amber-300 rounded-t-full rounded-b-sm shadow-[0_0_20px_#ef4444]"></div>
+                                <div class="w-3 h-12 bg-gradient-to-b from-amber-200 to-yellow-400 rounded-sm"></div>
+                            </div>
+                            <!-- Candle 3 -->
+                            <div class="flex flex-col items-center">
+                                <div class="flame-anim candle-flame w-4 h-6 bg-amber-400 rounded-t-full rounded-b-sm shadow-[0_0_15px_#f59e0b]"></div>
+                                <div class="w-2.5 h-10 bg-gradient-to-b from-pink-300 to-pink-500 rounded-sm"></div>
+                            </div>
+                        </div>
+
+                        <!-- Top Tier -->
+                        <div class="w-40 h-14 bg-gradient-to-r from-pink-400 via-rose-300 to-purple-400 rounded-t-2xl border-t-4 border-white/60 shadow-inner flex items-center justify-center relative overflow-hidden">
+                            <span class="text-xs font-semibold text-purple-900 uppercase tracking-widest">Queen Mahnoor</span>
+                            <div class="absolute inset-x-0 bottom-0 h-3 bg-pink-500/30"></div>
+                        </div>
+
+                        <!-- Middle Tier -->
+                        <div class="w-56 h-16 bg-gradient-to-r from-purple-900 via-pink-900 to-purple-900 rounded-t-xl border-t-2 border-pink-300/40 shadow-lg flex items-center justify-center relative">
+                            <div class="flex space-x-3 text-pink-300">
+                                <i data-lucide="heart" class="w-4 h-4 fill-pink-400"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-amber-300 text-amber-300"></i>
+                                <i data-lucide="heart" class="w-4 h-4 fill-pink-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Base Tier -->
+                        <div class="w-72 h-20 bg-gradient-to-r from-pink-600 via-rose-500 to-purple-700 rounded-t-2xl border-t-4 border-amber-300/60 shadow-2xl flex items-center justify-center">
+                            <span class="text-sm font-bold text-white tracking-widest uppercase drop-shadow">Forever &amp; Always</span>
+                        </div>
+
+                        <!-- Plate Base -->
+                        <div class="w-80 h-4 bg-gradient-to-r from-slate-300 via-white to-slate-400 rounded-full shadow-2xl border-t border-white"></div>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <button id="blow-candles-btn" class="glass-btn px-6 py-3 rounded-full text-sm font-semibold text-white tracking-wide flex items-center justify-center space-x-2 mx-auto">
+                            <i data-lucide="wind" class="w-4 h-4"></i>
+                            <span id="candle-btn-text">Tap to Blow Candles & Make a Wish ✨</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LUXURY 3D GIFT UNBOXING SECTION -->
+        <section class="space-y-8">
+            <div class="text-center space-y-3">
+                <h2 class="text-4xl sm:text-5xl font-serif-luxury font-bold bg-gradient-to-r from-pink-300 to-amber-200 bg-clip-text text-transparent">
+                    Unwrap Your Birthday Gifts 🎁
+                </h2>
+                <p class="text-pink-200/80 max-w-xl mx-auto text-sm sm:text-base">
+                    Every gift box holds a special piece of my heart reserved especially for you, my dearest Mahnoor. Tap to unbox!
+                </p>
+            </div>
+
+            <!-- 3D Glass Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Gift 1 -->
+                <div class="glass-card glass-card-hover p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer interactive-hover" onclick="openGiftModal(0)">
+                    <div class="w-24 h-24 mb-4 rounded-2xl bg-gradient-to-tr from-pink-500/20 to-purple-500/30 flex items-center justify-center border border-pink-400/30 shadow-inner group-hover:scale-110 transition">
+                        <span class="text-5xl animate-bounce">🧸</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-pink-200 font-serif-luxury mb-2">Giant Cuddle Teddy</h3>
+                    <p class="text-xs text-slate-300/80 mb-4">Softest hugs captured inside a warm cozy teddy bear to protect you always.</p>
+                    <span class="mt-auto inline-flex items-center text-xs font-semibold text-amber-300 group-hover:translate-x-1 transition">
+                        Open Gift Box <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </span>
+                </div>
+
+                <!-- Gift 2 -->
+                <div class="glass-card glass-card-hover p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer interactive-hover" onclick="openGiftModal(1)">
+                    <div class="w-24 h-24 mb-4 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-pink-500/30 flex items-center justify-center border border-amber-400/30 shadow-inner group-hover:scale-110 transition">
+                        <span class="text-5xl animate-bounce" style="animation-delay: 0.2s;">🍫</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-amber-200 font-serif-luxury mb-2">Luxury Chocolates</h3>
+                    <p class="text-xs text-slate-300/80 mb-4">Premium handcrafted sweet treats as sweet as your enchanting smile.</p>
+                    <span class="mt-auto inline-flex items-center text-xs font-semibold text-amber-300 group-hover:translate-x-1 transition">
+                        Open Gift Box <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </span>
+                </div>
+
+                <!-- Gift 3 -->
+                <div class="glass-card glass-card-hover p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer interactive-hover" onclick="openGiftModal(2)">
+                    <div class="w-24 h-24 mb-4 rounded-2xl bg-gradient-to-tr from-purple-500/20 to-pink-500/30 flex items-center justify-center border border-purple-400/30 shadow-inner group-hover:scale-110 transition">
+                        <span class="text-5xl animate-bounce" style="animation-delay: 0.4s;">💎</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-purple-200 font-serif-luxury mb-2">Sparkling Diamond Jewelry</h3>
+                    <p class="text-xs text-slate-300/80 mb-4">A glowing symbol of everlasting sparkle for the girl who outshines the stars.</p>
+                    <span class="mt-auto inline-flex items-center text-xs font-semibold text-amber-300 group-hover:translate-x-1 transition">
+                        Open Gift Box <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </span>
+                </div>
+
+                <!-- Gift 4 -->
+                <div class="glass-card glass-card-hover p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer interactive-hover" onclick="openGiftModal(3)">
+                    <div class="w-24 h-24 mb-4 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-pink-500/30 flex items-center justify-center border border-rose-400/30 shadow-inner group-hover:scale-110 transition">
+                        <span class="text-5xl animate-bounce" style="animation-delay: 0.6s;">🌹</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-rose-200 font-serif-luxury mb-2">1000 Royal Roses</h3>
+                    <p class="text-xs text-slate-300/80 mb-4">An endless bouquet of crimson glass roses that will never fade.</p>
+                    <span class="mt-auto inline-flex items-center text-xs font-semibold text-amber-300 group-hover:translate-x-1 transition">
+                        Open Gift Box <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </span>
+                </div>
+
+                <!-- Gift 5 -->
+                <div class="glass-card glass-card-hover p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer interactive-hover" onclick="openGiftModal(4)">
+                    <div class="w-24 h-24 mb-4 rounded-2xl bg-gradient-to-tr from-red-500/20 to-amber-500/30 flex items-center justify-center border border-red-400/30 shadow-inner group-hover:scale-110 transition">
+                        <span class="text-5xl animate-bounce" style="animation-delay: 0.8s;">💌</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-red-200 font-serif-luxury mb-2">Infinite Love Letter</h3>
+                    <p class="text-xs text-slate-300/80 mb-4">Heartfelt words written straight from Abubakar's soul for Mahnoor.</p>
+                    <span class="mt-auto inline-flex items-center text-xs font-semibold text-amber-300 group-hover:translate-x-1 transition">
+                        Read Love Letter <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </span>
+                </div>
+
+                <!-- Gift 6 -->
+                <div class="glass-card glass-card-hover p-6 rounded-3xl flex flex-col items-center text-center cursor-pointer interactive-hover" onclick="openGiftModal(5)">
+                    <div class="w-24 h-24 mb-4 rounded-2xl bg-gradient-to-tr from-indigo-500/20 to-pink-500/30 flex items-center justify-center border border-indigo-400/30 shadow-inner group-hover:scale-110 transition">
+                        <span class="text-5xl animate-bounce" style="animation-delay: 1s;">✈️</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-indigo-200 font-serif-luxury mb-2">Dream Romantic Getaway</h3>
+                    <p class="text-xs text-slate-300/80 mb-4">A golden ticket for us to travel the world together making memories.</p>
+                    <span class="mt-auto inline-flex items-center text-xs font-semibold text-amber-300 group-hover:translate-x-1 transition">
+                        Claim Ticket <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROMANTIC WISHES WALL (3D FLIP CARDS) -->
+        <section class="space-y-8">
+            <div class="text-center space-y-3">
+                <h2 class="text-4xl sm:text-5xl font-serif-luxury font-bold text-white glow-text-pink">
+                    Messages From My Heart 💖
+                </h2>
+                <p class="text-pink-200/80 text-sm sm:text-base">
+                    Hover or tap each 3D card to unlock the romantic wish hidden inside.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="perspective-1000 h-72 cursor-pointer flip-card interactive-hover">
+                    <div class="relative w-full h-full transform-style-3d">
+                        <!-- Front -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center border-pink-500/30 backface-hidden">
+                            <i data-lucide="sparkles" class="w-10 h-10 text-amber-300 mb-4"></i>
+                            <h4 class="text-2xl font-serif-luxury font-bold text-pink-200">You Are My Universe</h4>
+                            <p class="text-xs text-pink-300/70 mt-2">Flip card to read my vow</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 glass-card bg-gradient-to-br from-pink-950/80 to-purple-950/90 rounded-3xl p-6 flex flex-col items-center justify-center text-center rotate-y-180 backface-hidden border-pink-400/50">
+                            <p class="text-sm text-pink-100 font-cursive text-xl leading-relaxed">
+                                "Mahnoor, your presence in my life makes every single ordinary day feel like a magical dream. May your year be as extraordinary as you are."
+                            </p>
+                            <span class="text-xs text-amber-300 font-semibold mt-4">~ Forever Yours, Abubakar ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="perspective-1000 h-72 cursor-pointer flip-card interactive-hover">
+                    <div class="relative w-full h-full transform-style-3d">
+                        <!-- Front -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center border-rose-500/30 backface-hidden">
+                            <i data-lucide="heart-handshake" class="w-10 h-10 text-rose-300 mb-4"></i>
+                            <h4 class="text-2xl font-serif-luxury font-bold text-rose-200">Crazy &amp; Aesthetic Love</h4>
+                            <p class="text-xs text-pink-300/70 mt-2">Flip card to read</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 glass-card bg-gradient-to-br from-rose-950/80 to-pink-950/90 rounded-3xl p-6 flex flex-col items-center justify-center text-center rotate-y-180 backface-hidden border-rose-400/50">
+                            <p class="text-sm text-pink-100 font-cursive text-xl leading-relaxed">
+                                "To the prettiest girl with the sweetest soul: I promise to bring smiles to your face, laughter to your days, and warmth to your heart every single second!"
+                            </p>
+                            <span class="text-xs text-amber-300 font-semibold mt-4">~ Abubakar ❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="perspective-1000 h-72 cursor-pointer flip-card interactive-hover">
+                    <div class="relative w-full h-full transform-style-3d">
+                        <!-- Front -->
+                        <div class="absolute inset-0 glass-card rounded-3xl p-6 flex flex-col items-center justify-center text-center border-purple-500/30 backface-hidden">
+                            <i data-lucide="crown" class="w-10 h-10 text-yellow-300 mb-4"></i>
+                            <h4 class="text-2xl font-serif-luxury font-bold text-purple-200">The Queen of My Heart</h4>
+                            <p class="text-xs text-pink-300/70 mt-2">Flip card to read</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 glass-card bg-gradient-to-br from-purple-950/80 to-indigo-950/90 rounded-3xl p-6 flex flex-col items-center justify-center text-center rotate-y-180 backface-hidden border-purple-400/50">
+                            <p class="text-sm text-pink-100 font-cursive text-xl leading-relaxed">
+                                "May this new chapter bring endless happiness, success, good health, and infinite love. Happy Birthday, my beautiful Mahnoor!"
+                            </p>
+                            <span class="text-xs text-amber-300 font-semibold mt-4">~ Yours Always, Abubakar ❤️</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE SECRET WISH JAR -->
+        <section class="glass-card p-8 sm:p-12 rounded-3xl border-pink-500/30 text-center relative overflow-hidden">
+            <div class="max-w-xl mx-auto space-y-6">
+                <div class="w-16 h-16 mx-auto rounded-full bg-pink-500/20 flex items-center justify-center border border-pink-400/40">
+                    <i data-lucide="flame" class="w-8 h-8 text-pink-400 animate-pulse"></i>
+                </div>
+                <h3 class="text-3xl sm:text-4xl font-serif-luxury font-bold text-amber-200">The Glowing Secret Wish Jar 🔮</h3>
+                <p class="text-slate-300 text-sm">Tap the jar below to generate a random sweet romantic compliment dedicated to Mahnoor!</p>
+
+                <div id="wish-jar-display" class="glass-card p-6 rounded-2xl min-h-[100px] flex items-center justify-center text-lg sm:text-xl font-cursive text-pink-200 border-pink-300/30 shadow-inner">
+                    "Tap the button to unlock your secret love note..."
+                </div>
+
+                <button id="draw-wish-btn" class="glass-btn px-8 py-3.5 rounded-full font-bold text-white text-sm tracking-wider uppercase inline-flex items-center space-x-2">
+                    <i data-lucide="gift" class="w-4 h-4"></i>
+                    <span>Pull A Secret Wish</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- FOOTER BRANDING -->
+        <footer class="text-center py-8 text-slate-400/70 text-xs border-t border-white/10 space-y-2">
+            <p>Designed with 💖, 3D Glassmorphism &amp; Infinite Love for <strong class="text-pink-300">Mahnoor</strong> by <strong class="text-amber-300">Abubakar</strong>.</p>
+            <p>© 2026 Forever &amp; Always celebrating your life.</p>
+        </footer>
+
+    </div>
+
+    <!-- MODAL POPUP FOR GIFTS -->
+    <div id="gift-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card max-w-lg w-full p-8 rounded-3xl relative border-pink-500/40 shadow-[0_0_50px_rgba(236,72,153,0.3)] text-center space-y-6 transform scale-90 transition-transform duration-300" id="modal-box">
+            <button onclick="closeGiftModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-full glass-btn">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="modal-icon-container" class="text-6xl animate-bounce">🎁</div>
+            <h3 id="modal-title" class="text-3xl font-serif-luxury font-bold text-pink-200 glow-text-pink">Gift Title</h3>
+            <p id="modal-description" class="text-slate-200 font-light leading-relaxed text-base sm:text-lg">Gift content details...</p>
+            <button onclick="closeGiftModal()" class="glass-btn px-8 py-3 rounded-full text-white font-semibold">
+                Close &amp; Keep In Heart 💕
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC & AUDIO ENGINE -->
+    <script>
+        // -------------------------------------------------------------
+        // 1. SOUND EFFECTS & SYNTHESIZED ROMANTIC AUDIO ENGINE
+        // -------------------------------------------------------------
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let ambientOsc = null;
+        let ambientGain = null;
+        let musicalInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+        }
+
+        // Web Audio synthesized chime effect on hover/click
+        function playChimeSound(freq = 523.25, type = 'sine', duration = 0.5) {
+            try {
+                initAudio();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) { console.log("Audio play error", e); }
+        }
+
+        // Play romantic chord progression loop
+        function toggleRomanticMusic() {
+            initAudio();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const musicStatus = document.getElementById('music-status');
+            const musicBtn = document.getElementById('music-toggle');
+
+            if (isMusicPlaying) {
+                clearInterval(musicalInterval);
+                isMusicPlaying = false;
+                musicStatus.innerText = "Play Sound";
+                musicBtn.classList.remove('bg-pink-600/50');
+            } else {
+                isMusicPlaying = true;
+                musicStatus.innerText = "Mute Sound";
+                musicBtn.classList.add('bg-pink-600/50');
+
+                // Soft dreamy chord notes (C Major / A Minor Romantic Scale)
+                const notes = [261.63, 329.63, 392.00, 493.88, 523.25, 659.25, 783.99];
+                let step = 0;
+
+                musicalInterval = setInterval(() => {
+                    const note = notes[step % notes.length];
+                    playChimeSound(note, 'triangle', 1.5);
+                    if (Math.random() > 0.4) {
+                        setTimeout(() => playChimeSound(note * 1.25, 'sine', 1.0), 300);
+                    }
+                    step++;
+                }, 800);
+            }
+        }
+
+        document.getElementById('music-toggle').addEventListener('click', toggleRomanticMusic);
+
+        // -------------------------------------------------------------
+        // 2. CUSTOM CURSOR & HOVER HEART PARTICLES
+        // -------------------------------------------------------------
+        const customCursor = document.getElementById('custom-cursor');
+
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.left = e.clientX + 'px';
+            customCursor.style.top = e.clientY + 'px';
+
+            // Create sparkle trail
+            if (Math.random() > 0.7) {
+                createSparkleTrail(e.clientX, e.clientY);
+            }
+        });
+
+        function createSparkleTrail(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail text-pink-400 text-xs';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            const hearts = ['❤️', '✨', '💖', '🌸', '💫'];
+            trail.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+            document.body.appendChild(trail);
+
+            setTimeout(() => {
+                trail.remove();
+            }, 800);
+        }
+
+        // Hover effect for interactive elements
+        const interactiveEls = document.querySelectorAll('button, .glass-card, .interactive-hover');
+        interactiveEls.forEach(el => {
+            el.addEventListener('mouseenter', (e) => {
+                playChimeSound(659.25, 'sine', 0.2);
+                customCursor.classList.add('scale-150');
+            });
+            el.addEventListener('mouseleave', () => {
+                customCursor.classList.remove('scale-150');
+            });
+        });
+
+        // -------------------------------------------------------------
+        // 3. THREE.JS 3D GLASS PARTICLE BACKGROUND
+        // -------------------------------------------------------------
+        const canvas = document.getElementById('bg-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Create Floating 3D Particles & Heart Geometries
+        const particlesGroup = new THREE.Group();
+        scene.add(particlesGroup);
+
+        const particleCount = 120;
+        const geometries = [
+            new THREE.TetrahedronGeometry(0.3, 1),
+            new THREE.OctahedronGeometry(0.25, 0),
+            new THREE.SphereGeometry(0.2, 8, 8)
+        ];
+
+        const materials = [
+            new THREE.MeshPhongMaterial({ color: 0xf472b6, transparent: true, opacity: 0.6, shininess: 100 }),
+            new THREE.MeshPhongMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.5, shininess: 80 }),
+            new THREE.MeshPhongMaterial({ color: 0xc084fc, transparent: true, opacity: 0.6, shininess: 90 })
+        ];
+
+        const particles = [];
+
+        for (let i = 0; i < particleCount; i++) {
+            const geom = geometries[Math.floor(Math.random() * geometries.length)];
+            const mat = materials[Math.floor(Math.random() * materials.length)];
+            const mesh = new THREE.Mesh(geom, mat);
+
+            mesh.position.x = (Math.random() - 0.5) * 25;
+            mesh.position.y = (Math.random() - 0.5) * 25;
+            mesh.position.z = (Math.random() - 0.5) * 15;
+
+            mesh.rotation.x = Math.random() * Math.PI;
+            mesh.rotation.y = Math.random() * Math.PI;
+
+            mesh.userData = {
+                speedX: (Math.random() - 0.5) * 0.01,
+                speedY: (Math.random() - 0.5) * 0.01 + 0.005,
+                rotSpeed: (Math.random() - 0.5) * 0.02
+            };
+
+            particlesGroup.add(mesh);
+            particles.push(mesh);
+        }
+
+        // Ambient Lights
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        const pointLight1 = new THREE.PointLight(0xec4899, 2, 50);
+        pointLight1.position.set(5, 5, 5);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xa855f7, 2, 50);
+        pointLight2.position.set(-5, -5, 5);
+        scene.add(pointLight2);
+
+        camera.position.z = 10;
+
+        // Mouse Parallax for 3D Scene
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        });
+
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+
+            // Rotate particles & move upwards
+            particles.forEach(p => {
+                p.rotation.x += p.userData.rotSpeed;
+                p.rotation.y += p.userData.rotSpeed;
+                p.position.y += p.userData.speedY;
+                p.position.x += p.userData.speedX;
+
+                if (p.position.y > 12) p.position.y = -12;
+                if (p.position.x > 15) p.position.x = -15;
+                if (p.position.x < -15) p.position.x = 15;
+            });
+
+            // Gentle Camera Float
+            camera.position.x += (mouseX * 1.5 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 1.5 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function() {
+            animate3D();
+            lucide.createIcons();
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // -------------------------------------------------------------
+        // 4. CANDLE BLOWING & FIREWORKS INTERACTION
+        // -------------------------------------------------------------
+        let candlesBlown = false;
+        const blowBtn = document.getElementById('blow-candles-btn');
+        const candleBtnText = document.getElementById('candle-btn-text');
+
+        blowBtn.addEventListener('click', blowCandles);
+
+        function blowCandles() {
+            if (candlesBlown) return;
+            candlesBlown = true;
+
+            playChimeSound(880, 'sine', 0.8);
+            const flames = document.querySelectorAll('.candle-flame');
+            flames.forEach(f => {
+                f.style.transition = 'all 0.5s ease';
+                f.style.opacity = '0';
+                f.style.transform = 'scale(0)';
+            });
+
+            candleBtnText.innerText = "Candles Blown! Wish Sent To Universe ✨";
+            blowBtn.classList.add('bg-pink-600');
+
+            // Trigger Fireworks
+            triggerGrandFireworks();
+        }
+
+        document.getElementById('sparkle-burst-btn').addEventListener('click', () => {
+            playChimeSound(1046.50, 'triangle', 0.6);
+            triggerGrandFireworks();
+        });
+
+        function triggerGrandFireworks() {
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.4), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.6, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // -------------------------------------------------------------
+        // 5. GIFT UNBOXING MODALS LOGIC
+        // -------------------------------------------------------------
+        const giftsData = [
+            {
+                icon: "🧸",
+                title: "Giant Cuddle Teddy Bear",
+                description: "This soft plush teddy bear carries a lifetime supply of warm Abubakar hugs! Whenever you feel tired or need comfort, wrap your arms around this teddy and remember how deeply adored you are, Mahnoor."
+            },
+            {
+                icon: "🍫",
+                title: "Luxury Handcrafted Chocolates",
+                description: "A box of infinite sweetness! Each chocolate is infused with love, joy, and warmth — though none of them can ever be half as sweet as your magical smile."
+            },
+            {
+                icon: "💎",
+                title: "Sparkling Diamond Jewelry Box",
+                description: "A piece of brilliant sparkle crafted for the girl who outshines every galaxy. May this necklace remind you that you are Abubakar's most precious gem in the universe."
+            },
+            {
+                icon: "🌹",
+                title: "1000 Royal Crimson Roses",
+                description: "A bouquet of 1,000 everlasting roses that will never fade, symbolizing a love that blooms brighter with every single passing day. Happy Birthday my flower!"
+            },
+            {
+                icon: "💌",
+                title: "Infinite Heartfelt Love Letter",
+                description: "Dearest Mahnoor, having you in my life is the greatest blessing I could ever ask for. Your laughter lights up my world, your kindness heals my heart, and your love inspires me daily. Happy Birthday, my soulmate!"
+            },
+            {
+                icon: "✈️",
+                title: "Dream Trip Ticket to Paradise",
+                description: "Pack your bags! A VIP ticket to any place in the world you wish to visit with Abubakar. Let's travel, explore, and create memories that will last a hundred lifetimes."
+            }
+        ];
+
+        const giftModal = document.getElementById('gift-modal');
+        const modalBox = document.getElementById('modal-box');
+        const modalIcon = document.getElementById('modal-icon-container');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-description');
+
+        function openGiftModal(index) {
+            playChimeSound(783.99, 'sine', 0.5);
+            const data = giftsData[index];
+            modalIcon.innerText = data.icon;
+            modalTitle.innerText = data.title;
+            modalDesc.innerText = data.description;
+
+            giftModal.classList.add('modal-active');
+            modalBox.classList.remove('scale-90');
+            modalBox.classList.add('scale-100');
+
+            // Fire subtle confetti
+            confetti({
+                particleCount: 40,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function closeGiftModal() {
+            modalBox.classList.remove('scale-100');
+            modalBox.classList.add('scale-90');
+            giftModal.classList.remove('modal-active');
+        }
+
+        // Close modal on background click
+        giftModal.addEventListener('click', (e) => {
+            if (e.target === giftModal) {
+                closeGiftModal();
+            }
+        });
+
+        // -------------------------------------------------------------
+        // 6. SECRET WISH JAR GENERATOR
+        // -------------------------------------------------------------
+        const romanticCompliments = [
+            "✨ 'Mahnoor, your smile is the sweetest melody in Abubakar's life.'",
+            "🌸 'You are the most beautiful chapter in my entire life story.'",
+            "💫 'If I had a rose for every time I thought of you, I'd walk in a garden forever.'",
+            "👑 'To the queen of my heart: Happy Birthday, may your dreams all come true!'",
+            "💖 'My heart beat belongs to you today, tomorrow, and forever.'",
+            "🎀 'You make the world warmer, brighter, and infinitely more romantic!'"
+        ];
+
+        const wishDisplay = document.getElementById('wish-jar-display');
+        document.getElementById('draw-wish-btn').addEventListener('click', () => {
+            playChimeSound(987.77, 'triangle', 0.4);
+            wishDisplay.style.opacity = '0';
+            setTimeout(() => {
+                const randomWish = romanticCompliments[Math.floor(Math.random() * romanticCompliments.length)];
+                wishDisplay.innerText = randomWish;
+                wishDisplay.style.opacity = '1';
+                wishDisplay.style.transition = 'opacity 0.5s ease';
+            }, 200);
+        });
+    </script>
+</body>
+</html>
